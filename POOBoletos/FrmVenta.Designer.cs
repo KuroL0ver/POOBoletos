@@ -114,11 +114,10 @@ namespace POOBoletos
             // TxtTotal
             // 
             TxtTotal.Location = new Point(791, 261);
-            // TxtTotal.Text = total.ToString("F2");
-            TxtTotal.Text = "0.00";
             TxtTotal.Name = "TxtTotal";
             TxtTotal.Size = new Size(125, 27);
-            TxtTotal.TabIndex = 8; 
+            TxtTotal.TabIndex = 8;
+            TxtTotal.Text = "0.00";
             TxtTotal.TextAlign = HorizontalAlignment.Center;
             TxtTotal.TextChanged += TxtTotal_TextChanged;
             // 
@@ -162,7 +161,7 @@ namespace POOBoletos
             // 
             cBxBoletos.DropDownStyle = ComboBoxStyle.DropDownList;
             cBxBoletos.FormattingEnabled = true;
-            cBxBoletos.Items.AddRange(new object[] { "VIP", "Público" });
+            cBxBoletos.Items.AddRange(new object[] { "VIP", "General", "Estudiantes" });
             cBxBoletos.Location = new Point(189, 120);
             cBxBoletos.Name = "cBxBoletos";
             cBxBoletos.Size = new Size(311, 28);

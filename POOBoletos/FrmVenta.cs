@@ -3,6 +3,12 @@ namespace POOBoletos
     public partial class FrmVenta : Form
     {
         private Ventas _venta;
+        private readonly Dictionary<string, decimal> preciosBoletos = new Dictionary<string, decimal>
+        {
+            { "VIP", 1550m },
+            { "General", 500m },
+            { "Estudiantes", 430m }
+        };
         public FrmVenta(string tipoVenta)
         {
             InitializeComponent();
@@ -94,30 +100,66 @@ namespace POOBoletos
         {
             DgvConceptos.DataSource = null;
 
-            ConceptoDeVenta concepto = new ConceptoDeVenta();
-            concepto.Cantidad = Convert.ToInt32(TxtCantidad.Text);
-            concepto.ValorUnitario = Convert.ToDecimal(TxtValorUnitario.Text);
-            concepto.TipoBoleto = cBxBoletos.SelectedItem?.ToString(); // Captura el tipo de boleto
+            if (!int.TryParse(TxtCantidad.Text, out int cantidad) || cantidad <= 0)
+            {
+                MessageBox.Show("Por favor, ingrese una cantidad válida.");
+                return;
+            }
+
+            if (!decimal.TryParse(TxtValorUnitario.Text, out decimal valorUnitario) || valorUnitario <= 0)
+            {
+                MessageBox.Show("Por favor, ingrese un valor unitario válido.");
+                return;
+            }
+
+            if (cBxBoletos.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor, seleccione un tipo de boleto.");
+                return;
+            }
+
+            // Crear un nuevo concepto de venta
+            ConceptoDeVenta concepto = new ConceptoDeVenta
+            {
+                Cantidad = cantidad,
+                ValorUnitario = valorUnitario,
+                TipoBoleto = cBxBoletos.SelectedItem.ToString()
+            };
+
             _venta.Conceptos.Add(concepto);
 
+            // Actualizar el DataGridView
             DgvConceptos.DataSource = _venta.Conceptos;
 
             // Configurar encabezados de las columnas
             DgvConceptos.Columns["Cantidad"].HeaderText = "Cantidad";
             DgvConceptos.Columns["ValorUnitario"].HeaderText = "Valor Unitario";
             DgvConceptos.Columns["Importe"].HeaderText = "Importe";
-            DgvConceptos.Columns["TipoBoleto"].HeaderText = "Tipo de Boleto"; // Configura el encabezado
+            DgvConceptos.Columns["TipoBoleto"].HeaderText = "Tipo de Boleto";
+            DgvConceptos.Columns["NumeroBoleto"].HeaderText = "Número de Boleto";
 
+            // Limpiar campos
             TxtCantidad.Text = string.Empty;
             TxtValorUnitario.Text = string.Empty;
             TxtTotal.Text = _venta.Total.ToString("0.00");
-            cBxBoletos.SelectedIndex = -1; // Reinicia el ComboBox
+            cBxBoletos.SelectedIndex = -1;
             TxtCantidad.Focus();
         }
 
         private void cBxBoletos_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (cBxBoletos.SelectedItem != null)
+            {
+                string tipoBoleto = cBxBoletos.SelectedItem.ToString();
+                if (preciosBoletos.TryGetValue(tipoBoleto, out decimal precio))
+                {
+                    TxtValorUnitario.Text = precio.ToString("0.00");
+                }
+                else
+                {
+                    TxtValorUnitario.Text = "0.00"; // Valor por defecto si no se encuentra el tipo
+                }
+            }
         }
     }
 }
