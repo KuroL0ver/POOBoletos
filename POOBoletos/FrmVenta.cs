@@ -157,7 +157,7 @@ namespace POOBoletos
                 }
                 else
                 {
-                    TxtValorUnitario.Text = "0.00"; // Valor por defecto si no se encuentra el tipo
+                    TxtValorUnitario.Text = "0.00"; 
                 }
             }
         }
