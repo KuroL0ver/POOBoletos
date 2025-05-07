@@ -23,6 +23,7 @@
         public ConceptoDeVenta() 
         {
             NumeroBoleto = _contadorBoletos;
+            _contadorBoletos++;
         }
     }
 }
